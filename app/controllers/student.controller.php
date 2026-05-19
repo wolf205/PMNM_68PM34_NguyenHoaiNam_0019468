@@ -3,11 +3,12 @@ class student
 {
     public function index()
     {
-        echo "This is Student page";
+        // trả về view
+        require_once '../app/views/student/index.php';
     }
 
     public function create()
     {
-        echo "This is add student page";
+        require_once '../app/views/student/create.php';
     }
 }
