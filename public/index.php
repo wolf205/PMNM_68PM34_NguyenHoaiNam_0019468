@@ -1,8 +1,7 @@
 <?php
-
 require_once '../app/middleware/auth.middleware.php';
+require_once '../app/core/App.php';
 
-$authMiddleware = new authMiddleware();
-$authMiddleware->handle();
-
+$authMiddlewarre = new authMiddleware();
+$authMiddlewarre->handle();
 $app = new App();

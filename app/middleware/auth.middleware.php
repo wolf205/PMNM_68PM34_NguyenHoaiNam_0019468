@@ -1,18 +1,21 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
+if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-require_once '../app/core/App.php';
+
 class authMiddleware
 {
-
-    public function handle()
+    function handle()
     {
-        $currentRoute = isset($_GET['url']) ? trim($_GET['url'], '/') : '';
-        $publicRoutes = ['home/login', 'auth/login'];
+        if (!isset($_SESSION["username"]) && isset($_COOKIE["username"])) {
+            $_SESSION["username"] = $_COOKIE["username"];
+        }
 
-        if (!isset($_SESSION['username']) && !in_array($currentRoute, $publicRoutes)) {
-            header("Location: /home/login");
+        $publicRoutes = ['auth', 'auth/login'];
+        $currentUri = trim($_SERVER['REQUEST_URI'], '/');
+
+        if (!isset($_SESSION["username"]) && !isset($_COOKIE["username"]) && !in_array($currentUri, $publicRoutes)) {
+            header("Location: /auth");
             exit();
         }
     }

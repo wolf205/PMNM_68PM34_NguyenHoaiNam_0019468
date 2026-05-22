@@ -3,7 +3,7 @@ class home
 {
     public function index()
     {
-        echo "This is Home page";
+        require_once('../app/views/home/home.view.php');
     }
 
     public function login()
