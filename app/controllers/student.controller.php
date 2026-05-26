@@ -1,10 +1,13 @@
 <?php
-class student
+require_once '../app/core/controller.php';
+class student extends Controller
 {
     public function index()
     {
-        // trả về view
-        require_once '../app/views/student/index.php';
+        $student = $this->model("student");
+        $data = $student->getAllStudent();
+
+        $this->view("student/index", $data);
     }
 
     public function create()
