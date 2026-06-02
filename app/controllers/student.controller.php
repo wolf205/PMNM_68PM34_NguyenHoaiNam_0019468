@@ -7,11 +7,25 @@ class student extends Controller
         $student = $this->model("student");
         $data = $student->getAllStudent();
 
-        $this->view("student/index", $data);
+        $this->view("layouts/mainLayout", "student/index", $data);
     }
 
     public function create()
     {
-        require_once '../app/views/student/create.php';
+        $this->view("layouts/mainLayout", "student/create", []);
+    }
+    public function store()
+    {
+        $hoten = $_POST['hoten'] ?? '';
+        $gioitinh = $_POST['gioitinh'] ?? '';
+        $mssv = $_POST['mssv'] ?? '';
+
+        $result = $this->model("student")->createStudent($hoten, $gioitinh, $mssv);
+
+        if ($result) {
+            header("Location: /student/index");
+        } else {
+            echo "Failed to create student.";
+        }
     }
 }

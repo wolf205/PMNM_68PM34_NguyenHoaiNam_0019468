@@ -8,9 +8,9 @@ class Controller
         return new $modelProcessed();
     }
 
-    public function view($view, $data)
+    public function view($layout, $view, $data)
     {
         extract($data);
-        require_once "../app/views/$view.php";
+        require_once "../app/views/$layout.php";
     }
 }
