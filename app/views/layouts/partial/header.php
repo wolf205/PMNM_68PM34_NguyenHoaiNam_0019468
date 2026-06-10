@@ -11,6 +11,8 @@
             height: 50px;
             color: white;
             display: flex;
+            padding: 0;
+            margin: 0 0 20px;
         }
     </style>
 </head>
