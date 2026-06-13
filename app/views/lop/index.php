@@ -1,4 +1,5 @@
 <div class="container">
+    <?php $currentPage = $currentPage ?? 1; ?>
     <h1 class="main-title">Danh Sách Lớp Học</h1>
 
     <div class="toolbar">
@@ -70,13 +71,13 @@
                     onclick="applyFilters(<?= $currentPage - 1 ?>)">Trước</button>
 
                 <?php for ($i = 1; $i <= $totalPage; $i++): ?>
-                    <button class="page-link <?= ($i == $currentPage) ? 'active' : '' ?>"
+                    <button class="page-link <?= ($i == (isset($currentPage) ? $currentPage : 1)) ? 'active' : '' ?>"
                         onclick="applyFilters(<?= $i ?>)"><?= $i ?></button>
                 <?php endfor; ?>
 
-                <button class="page-link <?= ($currentPage >= $totalPage) ? 'disabled' : '' ?>"
-                    <?= ($currentPage >= $totalPage) ? 'disabled' : '' ?>
-                    onclick="applyFilters(<?= $currentPage + 1 ?>)">Sau</button>
+                <button class="page-link <?= (isset($currentPage) && $currentPage >= $totalPage) ? 'disabled' : '' ?>"
+                    <?= (isset($currentPage) && $currentPage >= $totalPage) ? 'disabled' : '' ?>
+                    onclick="applyFilters(<?= (isset($currentPage) ? $currentPage : 1) + 1 ?>)">Sau</button>
             </div>
         <?php endif; ?>
     </div>

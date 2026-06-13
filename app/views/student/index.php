@@ -1,6 +1,12 @@
 <div class="container">
     <h1 class="main-title">Danh Sách Sinh Viên</h1>
 
+    <?php
+    // Ensure pagination variables are defined to avoid undefined variable notices
+    $currentPage = isset($currentPage) ? $currentPage : 1;
+    $limit = isset($limit) ? $limit : 10;
+    ?>
+
     <div class="toolbar">
         <a href="/student/create" class="btn btn-success">+ Thêm Sinh viên</a>
 
