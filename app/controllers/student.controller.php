@@ -4,13 +4,14 @@ require_once '../app/core/controller.php';
 class student extends Controller
 {
     // 1. Danh sách sinh viên (phân trang + search)
-    public function index($page = 1, $limit = 10)
+    public function index($page = 1, $limit  = 10, $search = "")
     {
-        $search  = $_GET['search'] ?? '';
-
         $studentModel = $this->model("student");
-        // getAllStudent() trả về ['currentPage', 'totalPage', 'students']
+
         $result = $studentModel->getAllStudent($page, $limit, $search);
+
+        $result['limit'] = $limit;
+        $result['search'] = $search;
 
         $this->view("layouts/mainLayout", "student/index", $result);
     }

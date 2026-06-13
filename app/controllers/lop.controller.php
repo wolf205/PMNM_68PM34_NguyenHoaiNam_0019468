@@ -4,11 +4,8 @@ require_once '../app/core/controller.php';
 class Lop extends Controller
 {
     // 1. Hiển thị danh sách lớp học (có phân trang + search)
-    public function index($page = 1)
+    public function index($page = 1, $limit  = 10, $search = "")
     {
-        $search = $_GET['search'] ?? '';
-        $limit  = 10;
-
         $lopModel = $this->model("lop");
         // getAllClass() giờ trả về ['currentPage', 'totalPage', 'data']
         $result = $lopModel->getAllClass($page, $limit, $search);
