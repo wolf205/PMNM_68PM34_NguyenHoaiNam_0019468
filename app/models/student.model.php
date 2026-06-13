@@ -26,7 +26,7 @@ class StudentModel
                   FROM sinhviens sv
                   INNER JOIN lops l ON sv.ma_lop = l.ma_lop
                   WHERE (sv.mssv LIKE :search OR sv.hoten LIKE :search OR l.ten_lop LIKE :search)
-                  ORDER BY sv.id 
+                  ORDER BY sv.mssv ASC, sv.hoten ASC
                   LIMIT :limit OFFSET :offset";
 
         $stmt = $this->conn->prepare($query);

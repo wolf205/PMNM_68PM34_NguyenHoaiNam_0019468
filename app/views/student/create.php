@@ -1,42 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm Sinh Viên</title>
-    <style>
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>Thêm Sinh Viên</h1>
+<div class="container container-sm">
+    <h1 class="main-title">Thêm Sinh Viên</h1>
 
     <form action="/student/store" method="POST">
         <div class="form-group">
             <label for="hoten">Họ Tên:</label>
-            <input type="text" id="hoten" name="hoten" placeholder="Nhập họ và tên..." required>
+            <input type="text" id="hoten" name="hoten" class="form-control" placeholder="Nhập họ và tên..." required>
         </div>
 
         <div class="form-group">
             <label for="gioitinh">Giới Tính:</label>
-            <select id="gioitinh" name="gioitinh" required>
+            <select id="gioitinh" name="gioitinh" class="form-select" required>
                 <option value="">--Chọn Giới Tính--</option>
                 <option value="Nam">Nam</option>
                 <option value="Nữ">Nữ</option>
@@ -46,12 +19,12 @@
 
         <div class="form-group">
             <label for="mssv">MSSV:</label>
-            <input type="text" id="mssv" name="mssv" placeholder="Nhập mã số sinh viên..." required>
+            <input type="text" id="mssv" name="mssv" class="form-control" placeholder="Nhập mã số sinh viên..." required>
         </div>
 
         <div class="form-group">
             <label for="ma_lop">Lớp:</label>
-            <select id="ma_lop" name="ma_lop" required>
+            <select id="ma_lop" name="ma_lop" class="form-select" required>
                 <option value="">--Chọn Lớp--</option>
                 <?php $lopList = isset($lopList) ? $lopList : []; ?>
                 <?php foreach ($lopList as $lop): ?>
@@ -62,9 +35,9 @@
             </select>
         </div>
 
-        <button type="submit">Tạo Sinh Viên</button>
-        <a href="/student/index">Huỷ</a>
+        <div style="margin-top: 30px; display: flex; gap: 15px;">
+            <button type="submit" class="btn btn-success">Tạo Sinh Viên</button>
+            <a href="/student/index" class="btn btn-danger">Huỷ</a>
+        </div>
     </form>
-</body>
-
-</html>
+</div>

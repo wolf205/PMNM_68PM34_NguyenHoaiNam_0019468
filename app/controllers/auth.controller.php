@@ -6,7 +6,7 @@ class auth
 {
     function index($error_message = "")
     {
-        require_once("../app/views/auth/login.view.php");
+        require_once("../app/views/auth/index.php");
     }
 
     function login()

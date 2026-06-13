@@ -1,22 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        .footer {
-            background-color: #333;
-            height: 50px;
-            color: white;
-            display: flex;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="footer">Footer</div>
-</body>
-
-</html>
+<div style="background-color: #161b22; height: 50px; color: #8b949e; display: flex; align-items: center; justify-content: center; border-top: 1px solid #21262d;">
+    &copy; <?php echo date("Y"); ?> Quản lý Sinh viên. Neon Dark Mode Theme.
+</div>

@@ -1,0 +1,144 @@
+/* ========================================================
+   GLOBAL & NEON DARK MODE THEME
+======================================================== */
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: #0d1117; /* Nền tối sâu */
+    margin: 0;
+    color: #c9d1d9;
+}
+
+.content {
+    min-height: calc(100vh - 150px);
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #161b22;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #00ff66;
+    box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+}
+
+.container-sm {
+    max-width: 600px; /* Dùng cho các form Create / Edit / Login */
+}
+
+.main-title {
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
+    border-bottom: 2px solid #00ff66;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+}
+
+/* ========================================================
+   BUTTONS (NÚT BẤM)
+======================================================== */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    background-color: transparent;
+    text-align: center;
+}
+
+.btn-success {
+    color: #00ff66;
+    border-color: #00ff66;
+}
+.btn-success:hover {
+    background-color: #00ff66;
+    color: #0d1117;
+    box-shadow: 0 0 15px #00ff66;
+}
+
+.btn-danger {
+    color: #ff3333;
+    border-color: #ff3333;
+}
+.btn-danger:hover {
+    background-color: #ff3333;
+    color: #0d1117;
+    box-shadow: 0 0 15px #ff3333;
+}
+
+/* ========================================================
+   FORMS (INPUT, SELECT, TEXTAREA)
+======================================================== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #c9d1d9;
+}
+
+.form-control, .form-select {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    border: 1px solid #21262d;
+    padding: 12px 15px;
+    border-radius: 6px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #00ff66;
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ========================================================
+   TABLE & TOOLBAR (BẢNG & TÌM KIẾM)
+======================================================== */
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+.filter-group { display: flex; gap: 10px; align-items: center; }
+
+.class-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background-color: #0d1117; }
+.class-table th, .class-table td { border: 1px solid #21262d; padding: 14px; text-align: left; }
+.class-table th { background-color: #1f2937; color: #00ff66; font-weight: 600; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px; }
+.class-table th.text-center, .class-table td.text-center { text-align: center; }
+.class-table tr:hover { background-color: rgba(0, 255, 102, 0.05); }
+
+.btn-action { text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; margin-right: 5px; transition: all 0.2s ease; display: inline-block; border: 1px solid; }
+.btn-edit { color: #00ff66; border-color: #00ff66; }
+.btn-edit:hover { background-color: rgba(0, 255, 102, 0.2); box-shadow: 0 0 8px #00ff66; }
+.btn-delete { color: #ff3333; border-color: #ff3333; }
+.btn-delete:hover { background-color: rgba(255, 51, 51, 0.2); box-shadow: 0 0 8px #ff3333; }
+
+/* ========================================================
+   PAGINATION (PHÂN TRANG)
+======================================================== */
+.table-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+.page-info { color: #8b949e; font-size: 0.95rem; }
+.page-info strong { color: #00ff66; }
+.pagination { display: flex; gap: 8px; }
+.page-link { display: inline-block; padding: 8px 16px; border: 1px solid #21262d; color: #c9d1d9; text-decoration: none; border-radius: 6px; background-color: #161b22; cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: all 0.2s ease; }
+.page-link:hover:not(.disabled) { border-color: #00ff66; color: #00ff66; box-shadow: 0 0 8px rgba(0, 255, 102, 0.4); }
+.page-link.active { background-color: #00ff66; color: #0d1117; border-color: #00ff66; font-weight: bold; }
+.page-link.disabled { opacity: 0.4; cursor: not-allowed; }
+.no-data { text-align: center !important; color: #8b949e; font-style: italic; padding: 30px !important; }

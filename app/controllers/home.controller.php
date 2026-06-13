@@ -1,8 +1,10 @@
 <?php
-class home
+require_once '../app/core/controller.php';
+
+class home extends Controller
 {
     public function index()
     {
-        require_once('../app/views/home/home.view.php');
+        $this->view("layouts/mainLayout", "home/index", []);
     }
 }
