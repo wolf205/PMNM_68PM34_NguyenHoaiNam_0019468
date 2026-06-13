@@ -1,36 +1,51 @@
 <?php
 require_once '../app/core/controller.php';
+
 class student extends Controller
 {
+    // 1. Danh sách sinh viên (phân trang + search)
     public function index($page = 1, $limit = 10)
     {
-        $student = $this->model("student");
-        $data = $student->getAllStudent($page, $limit);
-        $this->view("layouts/mainLayout", "student/index", $data);
+        $search  = $_GET['search'] ?? '';
+
+        $studentModel = $this->model("student");
+        // getAllStudent() trả về ['currentPage', 'totalPage', 'students']
+        $result = $studentModel->getAllStudent($page, $limit, $search);
+
+        $this->view("layouts/mainLayout", "student/index", $result);
     }
 
+    // 2. Hiển thị form tạo sinh viên
     public function create()
     {
-        $this->view("layouts/mainLayout", "student/create", []);
+        // Lấy danh sách lớp để render dropdown chọn lớp
+        $lopList = $this->model("lop")->getAllClass();
+        $this->view("layouts/mainLayout", "student/create", [
+            'lopList' => $lopList['data'] ?? $lopList
+        ]);
     }
+
+    // 3. Lưu sinh viên mới
     public function store()
     {
-        $hoten = $_POST['hoten'] ?? '';
-        $gioitinh = $_POST['gioitinh'] ?? '';
-        $mssv = $_POST['mssv'] ?? '';
+        $hoten    = trim($_POST['hoten']    ?? '');
+        $gioitinh = trim($_POST['gioitinh'] ?? '');
+        $mssv     = trim($_POST['mssv']     ?? '');
+        $malop    = trim($_POST['ma_lop']   ?? '');
 
-        $result = $this->model("student")->createStudent($hoten, $gioitinh, $mssv);
-
-        if ($result) {
+        try {
+            $this->model("student")->createStudent($hoten, $gioitinh, $mssv, $malop);
             header("Location: /student/index");
-        } else {
-            echo "Failed to create student.";
+            exit();
+        } catch (\Exception $e) {
+            echo "Thêm sinh viên thất bại: " . $e->getMessage();
         }
     }
 
+    // 4. Hiển thị form sửa sinh viên
     public function edit($id)
     {
-        $studentModel = $this->model("student");
+        $studentModel    = $this->model("student");
         $data['student'] = $studentModel->getStudentById($id);
 
         if (!$data['student']) {
@@ -38,32 +53,39 @@ class student extends Controller
             return;
         }
 
+        // Lấy danh sách lớp để render dropdown
+        $lopResult      = $this->model("lop")->getAllClass();
+        $data['lopList'] = $lopResult['data'] ?? $lopResult;
+
         $this->view("layouts/mainLayout", "student/edit", $data);
     }
 
+    // 5. Cập nhật sinh viên
     public function update($id)
     {
-        $hoten = $_POST['hoten'] ?? '';
-        $gioitinh = $_POST['gioitinh'] ?? '';
-        $mssv = $_POST['mssv'] ?? '';
+        $hoten    = trim($_POST['hoten']    ?? '');
+        $gioitinh = trim($_POST['gioitinh'] ?? '');
+        $mssv     = trim($_POST['mssv']     ?? '');
+        $malop    = trim($_POST['ma_lop']   ?? '');
 
-        $result = $this->model("student")->updateStudent($id, $hoten, $gioitinh, $mssv);
-
-        if ($result) {
+        try {
+            $this->model("student")->updateStudent($id, $hoten, $gioitinh, $mssv, $malop);
             header("Location: /student/index");
-        } else {
-            echo "Cập nhật thất bại.";
+            exit();
+        } catch (\Exception $e) {
+            echo "Cập nhật sinh viên thất bại: " . $e->getMessage();
         }
     }
 
+    // 6. Xóa sinh viên
     public function delete($id)
     {
-        $result = $this->model("student")->deleteStudent($id);
-
-        if ($result) {
+        try {
+            $this->model("student")->deleteStudent($id);
             header("Location: /student/index");
-        } else {
-            echo "Xóa thất bại.";
+            exit();
+        } catch (\Exception $e) {
+            echo "Xóa sinh viên thất bại: " . $e->getMessage();
         }
     }
 }

@@ -12,23 +12,49 @@ class LopModel
     }
 
     /**
-     * 1. Lấy toàn bộ danh sách lớp học
+     * 1. Lấy danh sách lớp học có phân trang và tìm kiếm
      */
-    public function getAllClass()
+    public function getAllClass($page = 1, $limit = 10, $search = "")
     {
-        $sql = "SELECT * FROM lops";
+        $offset = ($page - 1) * $limit;
+        $searchTerm = "%" . $search . "%";
+
+        // Lấy danh sách có phân trang
+        $sql = "SELECT * FROM lops
+                WHERE (ma_lop LIKE :search OR ten_lop LIKE :search OR ghi_chu LIKE :search)
+                ORDER BY ma_lop
+                LIMIT :limit OFFSET :offset";
+
         $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':search', $searchTerm);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Đếm tổng số dòng
+        $sqlCount = "SELECT COUNT(*) FROM lops
+                     WHERE (ma_lop LIKE :search OR ten_lop LIKE :search OR ghi_chu LIKE :search)";
+
+        $stmtCount = $this->conn->prepare($sqlCount);
+        $stmtCount->bindValue(':search', $searchTerm);
+        $stmtCount->execute();
+        $total = $stmtCount->fetchColumn();
+
+        $totalPage = ceil($total / $limit);
+
+        return [
+            "currentPage" => $page,
+            "totalPage"   => $totalPage,
+            "data"        => $result
+        ];
     }
 
     /**
      * 2. Thêm một lớp học mới
-     * Chủ động check trùng ma_lop trước khi insert
      */
     public function createClass($malop, $tenlop, $ghichu)
     {
-        // Kiểm tra xem ma_lop đã tồn tại hay chưa để tránh trùng Khóa chính (Primary Key)
         $checkSql = "SELECT COUNT(*) FROM lops WHERE ma_lop = :ma_lop";
         $checkStmt = $this->conn->prepare($checkSql);
         $checkStmt->execute([':ma_lop' => $malop]);
@@ -38,7 +64,6 @@ class LopModel
 
         $sql = "INSERT INTO lops (ma_lop, ten_lop, ghi_chu) VALUES (:ma_lop, :ten_lop, :ghi_chu)";
         $stmt = $this->conn->prepare($sql);
-
         $stmt->bindParam(':ma_lop', $malop);
         $stmt->bindParam(':ten_lop', $tenlop);
         $stmt->bindParam(':ghi_chu', $ghichu);
@@ -47,7 +72,7 @@ class LopModel
     }
 
     /**
-     * 3. Lấy thông tin chi tiết của 1 lớp học theo ma_lop
+     * 3. Lấy thông tin chi tiết 1 lớp học theo ma_lop
      */
     public function getClassById($malop)
     {
@@ -59,11 +84,10 @@ class LopModel
     }
 
     /**
-     * 4. Cập nhật thông tin lớp học theo ma_lop
+     * 4. Cập nhật thông tin lớp học
      */
     public function updateClass($malop, $tenlop, $ghichu)
     {
-        // Kiểm tra xem lớp học có tồn tại hay không trước khi update
         $checkSql = "SELECT COUNT(*) FROM lops WHERE ma_lop = :ma_lop";
         $checkStmt = $this->conn->prepare($checkSql);
         $checkStmt->execute([':ma_lop' => $malop]);
@@ -73,7 +97,6 @@ class LopModel
 
         $sql = "UPDATE lops SET ten_lop = :ten_lop, ghi_chu = :ghi_chu WHERE ma_lop = :ma_lop";
         $stmt = $this->conn->prepare($sql);
-
         $stmt->bindParam(':ma_lop', $malop);
         $stmt->bindParam(':ten_lop', $tenlop);
         $stmt->bindParam(':ghi_chu', $ghichu);
@@ -82,19 +105,17 @@ class LopModel
     }
 
     /**
-     * 5. Xóa lớp học sử dụng Transaction
+     * 5. Xóa lớp học dùng Transaction
      */
     public function deleteClass($malop)
     {
         try {
             $this->conn->beginTransaction();
 
-            // 1. Xóa tất cả sinh viên thuộc mã lớp này trước để tránh lỗi khóa ngoại
             $sqlDeleteStudents = "DELETE FROM sinhviens WHERE ma_lop = :ma_lop";
             $stmtStudents = $this->conn->prepare($sqlDeleteStudents);
             $stmtStudents->execute([':ma_lop' => $malop]);
 
-            // 2. Xóa chính lớp học đó
             $sqlDeleteClass = "DELETE FROM lops WHERE ma_lop = :ma_lop";
             $stmtClass = $this->conn->prepare($sqlDeleteClass);
             $stmtClass->execute([':ma_lop' => $malop]);
@@ -103,7 +124,6 @@ class LopModel
             return true;
         } catch (\Exception $e) {
             $this->conn->rollBack();
-            // Đẩy tiếp Exception ra ngoài để Controller xử lý hiển thị thông báo
             throw $e;
         }
     }

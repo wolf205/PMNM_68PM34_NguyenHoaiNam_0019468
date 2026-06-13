@@ -3,17 +3,18 @@ require_once '../app/core/controller.php';
 
 class Lop extends Controller
 {
-    // 1. Hiển thị danh sách lớp học
-    public function index($page = 1, $limit = 10)
+    // 1. Hiển thị danh sách lớp học (có phân trang + search)
+    public function index($page = 1)
     {
-        $lop = $this->model("lop");
+        $search = $_GET['search'] ?? '';
+        $limit  = 10;
 
-        // Vì hàm getAllClass ở model trước chưa phân trang, tạm thời lấy hết dữ liệu
-        // Nếu sau này bạn tối ưu phân trang, có thể truyền thêm $page, $limit vào hàm này
-        $data = $lop->getAllClass();
+        $lopModel = $this->model("lop");
+        // getAllClass() giờ trả về ['currentPage', 'totalPage', 'data']
+        $result = $lopModel->getAllClass($page, $limit, $search);
 
-        // Gọi view hiển thị giao diện danh sách lớp
-        $this->view("layouts/mainLayout", "lop/index", $data);
+        // Truyền thẳng mảng kết quả vào view (extract sẽ tạo $data, $totalPage, $currentPage)
+        $this->view("layouts/mainLayout", "lop/index", $result);
     }
 
     // 2. Hiển thị form tạo mới lớp học
@@ -22,28 +23,26 @@ class Lop extends Controller
         $this->view("layouts/mainLayout", "lop/create", []);
     }
 
-    // 3. Xử lý lưu lớp học mới vào cơ sở dữ liệu
+    // 3. Lưu lớp học mới
     public function store()
     {
-        $malop = $_POST['ma_lop'] ?? '';
-        $tenlop = $_POST['ten_lop'] ?? '';
-        $ghichu = $_POST['ghi_chu'] ?? '';
+        $malop  = trim($_POST['ma_lop']  ?? '');
+        $tenlop = trim($_POST['ten_lop'] ?? '');
+        $ghichu = trim($_POST['ghi_chu'] ?? '');
 
-        $result = $this->model("lop")->createClass($malop, $tenlop, $ghichu);
-
-        if ($result) {
-            // Chuyển hướng về trang danh sách lớp học nếu thành công
+        try {
+            $this->model("lop")->createClass($malop, $tenlop, $ghichu);
             header("Location: /lop/index");
             exit();
-        } else {
-            echo "Thêm mới lớp học thất bại.";
+        } catch (\Exception $e) {
+            echo "Thêm lớp học thất bại: " . $e->getMessage();
         }
     }
 
-    // 4. Hiển thị form chỉnh sửa lớp học theo ma_lop
+    // 4. Hiển thị form sửa lớp học
     public function edit($malop)
     {
-        $lopModel = $this->model("lop");
+        $lopModel   = $this->model("lop");
         $data['lop'] = $lopModel->getClassById($malop);
 
         if (!$data['lop']) {
@@ -54,32 +53,30 @@ class Lop extends Controller
         $this->view("layouts/mainLayout", "lop/edit", $data);
     }
 
-    // 5. Xử lý cập nhật thông tin lớp học vào cơ sở dữ liệu
+    // 5. Cập nhật lớp học
     public function update($malop)
     {
-        $tenlop = $_POST['ten_lop'] ?? '';
-        $ghichu = $_POST['ghi_chu'] ?? '';
+        $tenlop = trim($_POST['ten_lop'] ?? '');
+        $ghichu = trim($_POST['ghi_chu'] ?? '');
 
-        $result = $this->model("lop")->updateClass($malop, $tenlop, $ghichu);
-
-        if ($result) {
-            // Chuyển hướng về trang danh sách lớp học nếu thành công
+        try {
+            $this->model("lop")->updateClass($malop, $tenlop, $ghichu);
             header("Location: /lop/index");
             exit();
-        } else {
-            echo "Cập nhật thông tin lớp học thất bại.";
+        } catch (\Exception $e) {
+            echo "Cập nhật lớp học thất bại: " . $e->getMessage();
         }
     }
 
+    // 6. Xóa lớp học
     public function delete($malop)
     {
-        $result = $this->model("lop")->deleteClass($malop);
-
-        if ($result) {
+        try {
+            $this->model("lop")->deleteClass($malop);
             header("Location: /lop/index");
             exit();
-        } else {
-            echo "Xoá lớp học thất bại";
+        } catch (\Exception $e) {
+            echo "Xóa lớp học thất bại: " . $e->getMessage();
         }
     }
 }
